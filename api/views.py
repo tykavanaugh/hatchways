@@ -44,6 +44,6 @@ def post_view(request):
         direction = body['direction']
     tags = body['tags']
     posts = queryTags(tags)
-    posts.sort(key=lambda x: x.get(sortBy))
+    posts.sort(key=lambda x: x.get(sortBy),reverse=True if direction=='desc' else False)
     return JsonResponse({"posts":posts},status=status.HTTP_200_OK)
 
