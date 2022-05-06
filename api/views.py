@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 import json
-from .helpers import getAPIRequest
+from .helpers import queryTags
 #from .serializers import TaskSerializer
 #from .models import Task
 
@@ -43,7 +43,7 @@ def post_view(request):
             return JsonResponse({"error": "direction parameter is required"},status=status.HTTP_400_BAD_REQUEST)
         direction = body['direction']
     tags = body['tags']
-    getAPIRequest(tags[0])
-
-    return Response(f'{tags} {sortBy} {direction}')
+    posts = queryTags(tags)
+    posts.sort(key=lambda x: x.get(sortBy))
+    return JsonResponse({"posts":posts},status=status.HTTP_200_OK)
 
