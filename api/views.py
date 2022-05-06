@@ -1,11 +1,9 @@
-from urllib import response
 from django.http import JsonResponse
-from django.shortcuts import render
-
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 import json
+from .helpers import getAPIRequest
 #from .serializers import TaskSerializer
 #from .models import Task
 
@@ -20,9 +18,14 @@ def ping_view(request):
 
 @api_view(['GET'])
 def post_view(request):
-    body = json.loads(request.body.decode("utf-8"))
+    #Parse request
+    try: 
+        body = json.loads(request.body.decode("utf-8"))
+    except:
+        return JsonResponse({"error": "invalid json format in request"},status=status.HTTP_400_BAD_REQUEST)
     #Handle tag errors
     if 'tags' not in body:
+        #Tag error
         return JsonResponse({"error": "tags parameter is required"},status=status.HTTP_400_BAD_REQUEST)
     #Default values
     sortBy = 'id'
@@ -39,6 +42,8 @@ def post_view(request):
             #Invalid value
             return JsonResponse({"error": "direction parameter is required"},status=status.HTTP_400_BAD_REQUEST)
         direction = body['direction']
+    tags = body['tags']
+    getAPIRequest(tags[0])
 
-    return Response(f'test {sortBy} {direction}')
+    return Response(f'{tags} {sortBy} {direction}')
 
