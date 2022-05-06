@@ -11,10 +11,7 @@ from .helpers import queryTags
 
 @api_view(['GET'])
 def ping_view(request):
-    body = {
-        f'"success"':True
-    }
-    return JsonResponse(body)
+    return JsonResponse({"success": True},status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def post_view(request):
